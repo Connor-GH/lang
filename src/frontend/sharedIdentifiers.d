@@ -1,0 +1,16 @@
+module sharedIdentifiers;
+const string eq_identifier = "=";
+const string add_identifier = "+";
+const string sub_identifier = "-";
+const string mul_identifier = "*";
+const string div_identifier = "/";
+const string mod_identifier = "%";
+const string rs_identifier = ">>";
+const string ls_identifier = "<<";
+const string addeq_identifier = "+=";
+const string subeq_identifier = "-=";
+const string muleq_identifier = "*=";
+const string diveq_identifier = "/=";
+const string modeq_identifier = "%=";
+const string rseq_identifier = ">>=";
+const string lseq_identifier = "<<=";
