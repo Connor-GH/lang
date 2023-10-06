@@ -1,6 +1,8 @@
 /.vscode/
 /.idea/
 /bin/
+/bin/*
+bin/
 /obj/
 *~
 *.o

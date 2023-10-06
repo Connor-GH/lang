@@ -36,6 +36,7 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 			if (i > 0) {
 				idClass temp = new idClass();
 				temp.set_str(vec[i-1]);
+
 				if (vec.contains("+") != -1) {
 					auto pos = vec.contains("+");
 					// not "= +" or "+ ="
@@ -50,16 +51,71 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 					}
 				} else if (vec.contains("-") != -1) {
 					auto pos = vec.contains("-");
+					// not "= +" or "+ ="
+					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
+						idClass v1 = new idClass();
+						v1.set_str(vec[pos-1]);
+						idClass v2 = new idClass();
+						v2.set_str(vec[pos+1]);
+						expressionClass expr = new expressionClass(op.sub, v1, v2);
+						temp.set_expr(expr);
+						lists ~= temp;
+					}
 				} else if (vec.contains("*") != -1) {
 					auto pos = vec.contains("*");
+					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
+						idClass v1 = new idClass();
+						v1.set_str(vec[pos-1]);
+						idClass v2 = new idClass();
+						v2.set_str(vec[pos+1]);
+						expressionClass expr = new expressionClass(op.mul, v1, v2);
+						temp.set_expr(expr);
+						lists ~= temp;
+					}
 				} else if (vec.contains("/") != -1) {
 					auto pos = vec.contains("/");
+					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
+						idClass v1 = new idClass();
+						v1.set_str(vec[pos-1]);
+						idClass v2 = new idClass();
+						v2.set_str(vec[pos+1]);
+						expressionClass expr = new expressionClass(op.div, v1, v2);
+						temp.set_expr(expr);
+						lists ~= temp;
+					}
 				} else if (vec.contains("%") != -1) {
 					auto pos = vec.contains("%");
+					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
+						idClass v1 = new idClass();
+						v1.set_str(vec[pos-1]);
+						idClass v2 = new idClass();
+						v2.set_str(vec[pos+1]);
+						expressionClass expr = new expressionClass(op.mod, v1, v2);
+						temp.set_expr(expr);
+						lists ~= temp;
+					}
 				} else if (vec.contains("<<") != -1) {
 					auto pos = vec.contains("<<");
+					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
+						idClass v1 = new idClass();
+						v1.set_str(vec[pos-1]);
+						idClass v2 = new idClass();
+						v2.set_str(vec[pos+1]);
+						expressionClass expr = new expressionClass(op.lShift, v1, v2);
+						temp.set_expr(expr);
+						lists ~= temp;
+					}
 				} else if (vec.contains(">>") != -1) {
 					auto pos = vec.contains(">>");
+					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
+						idClass v1 = new idClass();
+						v1.set_str(vec[pos-1]);
+						idClass v2 = new idClass();
+						v2.set_str(vec[pos+1]);
+						expressionClass expr = new expressionClass(op.rShift, v1, v2);
+						temp.set_expr(expr);
+						lists ~= temp;
+					}
 				} else {
 					// assume a normal assignment
 					temp.set_init(vec[i+1]);
@@ -71,5 +127,5 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 	foreach (id; lists)
 		logWriteln(logLevel.error, id);
 
-	GC.collect();
+	//GC.collect();
 }
