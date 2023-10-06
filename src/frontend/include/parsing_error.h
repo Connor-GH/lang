@@ -14,8 +14,12 @@ extern "C" {
 #define CLR "\033[0m"
 void
 parsing_err(char warning_level, const char *message, const char *buffer,
-			size_t problematic_index, const char *file, size_t line_number);
+			size_t problematic_index);
 
+void set_file(const char *file);
+void set_line_number(const size_t number);
+void set_buffer(const char *buffer);
+const char *get_buffer(void);
 #ifdef __cplusplus
 }
 #endif

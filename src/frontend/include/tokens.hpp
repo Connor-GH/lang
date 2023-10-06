@@ -35,7 +35,7 @@
 struct type_token_vals {
 	size_t token_location;
 	size_t preparsed_len;
-    /*const char **/ std::string val;
+    std::string val;
 };
 struct type_token_vals
 type_token_info(std::string tok);

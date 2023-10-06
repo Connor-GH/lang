@@ -11,13 +11,9 @@
 
 #include "parsing_error.h"
 #include "classes.hpp"
-//#include "idClass.hpp"
-//#include "expressionClass.hpp"
 #include "sharedIdentifiers.hpp"
 
 
-static const char *static_file;
-static size_t static_line_no;
 
 static int is_in_equals = 0;
 
@@ -67,8 +63,7 @@ static inline void getline_string_delim(std::vector<std::string>& result,
 
 
 
-std::vector<std::string> tokenize_assignment_expression(std::string buf,
-		std::ifstream& fp, const char *file, size_t lineno) {
+std::vector<std::string> tokenize_assignment_expression(std::string buf) {
 	std::vector<std::string> result;
 	std::stringstream ss(buf);
 	std::string tmp;
@@ -109,8 +104,6 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf,
 
 size_t has_assignment(std::string buf, const char *file, size_t line_no) {
 /* identifier is split for the sake of bootstrapping */
-	static_file = file;
-	static_line_no = line_no;
 	size_t idx_of_equals = 0;
 	if (buf.empty())
 		return buf.length() + 1;
@@ -119,7 +112,7 @@ size_t has_assignment(std::string buf, const char *file, size_t line_no) {
 	if (buf.rfind(eq_identifier) != idx_of_equals) {
 		std::string errmsg = "Multiple assignments in one statement unimplemented.";
 		parsing_err(ERROR, errmsg.c_str(),
-				buf.c_str(), buf.rfind(eq_identifier), static_file, static_line_no);
+				buf.c_str(), buf.rfind(eq_identifier));
 	}
 
 	if (idx_of_equals != std::string::npos) {

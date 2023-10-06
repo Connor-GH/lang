@@ -1,5 +1,7 @@
 module logWriteln;
-import std.stdio;
+import std.stdio : write, writeln;
+import core.stdc.stdlib : exit;
+import core.memory : GC;
 enum logLevel {
 	warning,
 	error,
@@ -15,7 +17,13 @@ void logWriteln(T ...)(logLevel ll, T t) {
 		write("\033[1;31mError: ");
 	} else if (ll == logLevel.note) {
 		write("\033[1;34mNote: ");
+	} else if (ll == logLevel.fatalError) {
+		write("\033[1;31mError: ");
+		write(t);
+		writeln("\033[0m");
+		GC.collect();
+		exit(1);
 	}
-	writeln(t);
-	write("\033[0m");
+	write(t);
+	writeln("\033[0m");
 }

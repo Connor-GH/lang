@@ -42,7 +42,7 @@ remove_portion_of_buffer_and_merge(std::string initbuf, size_t start,
 }
 
 static size_t
-has_end_comment(std::string buf, const char *file)
+has_end_comment(std::string buf)
 {
 	size_t idx_of_end_comment = 0;
 	if (buf.empty())
@@ -51,7 +51,7 @@ has_end_comment(std::string buf, const char *file)
 	idx_of_end_comment = buf.find(end_comment);
 	if (buf.rfind(end_comment) != idx_of_end_comment)
 		parsing_err(ERROR, "Nested comments are not supported.", buf.c_str(),
-					buf.rfind(end_comment), file, line_no);
+					buf.rfind(end_comment)/*, file, line_no*/);
 	if (idx_of_end_comment != std::string::npos) {
 		is_in_comment = 0;
 		return idx_of_end_comment + 1;
@@ -59,7 +59,7 @@ has_end_comment(std::string buf, const char *file)
 	return buf.length()+1;
 }
 static size_t
-has_begin_comment(std::string buf, const char *file)
+has_begin_comment(std::string buf)
 {
 	size_t idx_of_begin_comment = 0;
 	if (buf.empty())
@@ -68,7 +68,7 @@ has_begin_comment(std::string buf, const char *file)
 	idx_of_begin_comment = buf.find(begin_comment);
 	if (buf.rfind(begin_comment) != idx_of_begin_comment)
 		parsing_err(ERROR, "Nested comments are not supported.", buf.c_str(),
-					buf.rfind(begin_comment), file, line_no);
+					buf.rfind(begin_comment)/*, file, line_no*/);
 	if (idx_of_begin_comment != std::string::npos) {
 		is_in_comment = 1;
 		return idx_of_begin_comment + 1;
@@ -86,6 +86,7 @@ enter_block_and_parse(char const *file)
 	std::string tmp_buf;
 	int error_num;
 	if (strcmp(file, "stdin") != 0) {
+		set_file(file);
 		fp.open(file);
 		if (!fp.is_open()) {
 			error_num = errno;
@@ -93,11 +94,15 @@ enter_block_and_parse(char const *file)
 				<< strerror(error_num) << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+	} else {
+		set_file("stdin");
 	}
 	while (std::getline((strcmp(file, "stdin") == 0) ? std::cin : fp, initbuf)) {
 		line_no++;
-		start = has_begin_comment(initbuf, file);
-		end = has_end_comment(initbuf, file);
+		set_line_number(line_no);
+		set_buffer(initbuf.c_str());
+		start = has_begin_comment(initbuf);
+		end = has_end_comment(initbuf);
 
 		/* parse comments */
 		if (start < initbuf.length() && end < initbuf.length()) {
@@ -121,7 +126,7 @@ enter_block_and_parse(char const *file)
 
 
 		if (has_assignment(initbuf, file, line_no) < initbuf.length()) {
-			std::vector<std::string> vec = tokenize_assignment_expression(initbuf, fp, file, line_no);
+			std::vector<std::string> vec = tokenize_assignment_expression(initbuf);
 			// line tokenized
 			for (std::string s : vec)
 				std::cout << s << ", ";

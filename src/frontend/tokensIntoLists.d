@@ -1,14 +1,16 @@
 import std.stdio;
 import std.conv;
+import std.string : toStringz;
 import core.memory : GC;
 import core.stdc.stdlib;
 import core.stdcpp.string;
 import idClass : idClass;
 import expressionClass : expressionClass, op;
+import parsingError;
 import logWriteln : logWriteln, logLevel;
 
 /// Returns the index of string in array, returns -1 if not found
-static auto contains(string[] v, string s) {
+static long contains(string[] v, string s) {
 	foreach (i, str; v) {
 		if (str == s)
 			return i;
@@ -37,103 +39,62 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 				idClass temp = new idClass();
 				temp.set_str(vec[i-1]);
 
-				if (vec.contains("+") != -1) {
-					auto pos = vec.contains("+");
-					// not "= +" or "+ ="
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
-						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
-						v2.set_str(vec[pos+1]);
-						expressionClass expr = new expressionClass(op.add, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
-					}
-				} else if (vec.contains("-") != -1) {
-					auto pos = vec.contains("-");
-					// not "= +" or "+ ="
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
-						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
-						v2.set_str(vec[pos+1]);
-						expressionClass expr = new expressionClass(op.sub, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
-					}
-				} else if (vec.contains("*") != -1) {
-					auto pos = vec.contains("*");
-					idClass v1 = new idClass();
-					idClass v2 = new idClass();
-					if ((vec[pos-1] != "=") && (vec[pos+1] != "=")) {
-						v1.set_str(vec[pos-1]);
-						v2.set_str(vec[pos+1]);
-					} else {
-						// *=
-						if (vec[pos+1] == "=") {
-							temp.set_str(vec[pos-1]);
-							v1.set_str(vec[pos-1]);
-							if ((pos+2) > size) {
-								logWriteln(logLevel.fatalError, "Statement malformed.");
-								exit(1);
-							}
-							v2.set_str(vec[pos+2]);
-						}
-						expressionClass expr = new expressionClass(op.mul, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
+				long pos = 0;
+				op operation = op.uninitialized;
 
-					}
+				if (vec.contains("+") != -1) {
+					pos = vec.contains("+");
+					operation = op.add;
+				} else if (vec.contains("-") != -1) {
+					pos = vec.contains("-");
+					operation = op.sub;
+				} else if (vec.contains("*") != -1) {
+					pos = vec.contains("*");
+					operation = op.mul;
 				} else if (vec.contains("/") != -1) {
-					auto pos = vec.contains("/");
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
-						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
-						v2.set_str(vec[pos+1]);
-						expressionClass expr = new expressionClass(op.div, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
-					}
+					pos = vec.contains("/");
+					operation = op.div;
 				} else if (vec.contains("%") != -1) {
-					auto pos = vec.contains("%");
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
-						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
-						v2.set_str(vec[pos+1]);
-						expressionClass expr = new expressionClass(op.mod, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
-					}
+					pos = vec.contains("%");
+					operation = op.mod;
 				} else if (vec.contains("<<") != -1) {
-					auto pos = vec.contains("<<");
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
-						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
-						v2.set_str(vec[pos+1]);
-						expressionClass expr = new expressionClass(op.lShift, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
-					}
+					pos = vec.contains("<<");
+					operation = op.lShift;
 				} else if (vec.contains(">>") != -1) {
-					auto pos = vec.contains(">>");
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
-						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
-						v2.set_str(vec[pos+1]);
-						expressionClass expr = new expressionClass(op.rShift, v1, v2);
-						temp.set_expr(expr);
-						lists ~= temp;
-					}
+					pos = vec.contains(">>");
+					operation = op.rShift;
 				} else {
 					// assume a normal assignment
 					temp.set_init(vec[i+1]);
 					lists ~= temp;
+				break;
 				}
+				idClass v1 = new idClass();
+				idClass v2 = new idClass();
+				if ((vec[pos-1] != "=") && (vec[pos+1] != "=")) {
+					v1.set_str(vec[pos-1]);
+					v2.set_str(vec[pos+1]);
+				} else {
+					// *= or += or /= ...
+					if (vec[pos+1] == "=") {
+						temp.set_str(vec[pos-1]);
+						v1.set_str(vec[pos-1]);
+						if ((pos+2) > size) {
+							logWriteln(logLevel.fatalError, "Statement malformed.");
+							exit(1);
+						}
+						v2.set_str(vec[pos+2]);
+					}
+				}
+				expressionClass expr = new expressionClass(operation, v1, v2);
+				temp.set_expr(expr);
+				lists ~= temp;
+
+			} else {
+				parsing_err(ERROR, toStringz("Nonsensical statement.\n"),
+						get_buffer(), i);
 			}
+
 		}
 	}
 	foreach (id; lists)
