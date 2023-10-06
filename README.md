@@ -2,14 +2,14 @@
 
 progress so far:
 
-code parser works - ~12000 lines parsed per second
+- code parser works - ~12000 lines parsed per second
 
 WIP/needs work:
-driver parsing - WIP
-syntax tree building - WIP
-syntax extensions (beyond arithmetic; functions, etc) - NEEDSWORK
-codegen - NEEDSWORK
-performance improvements - WIP
+- driver parsing - WIP
+- syntax tree building - WIP
+- syntax extensions (beyond arithmetic; functions, etc) - NEEDSWORK
+- codegen - NEEDSWORK
+- performance improvements - WIP
 
 
 download with:
