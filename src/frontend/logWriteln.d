@@ -3,6 +3,7 @@ import std.stdio;
 enum logLevel {
 	warning,
 	error,
+	fatalError,
 	note
 }
 

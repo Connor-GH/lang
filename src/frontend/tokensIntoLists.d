@@ -63,14 +63,26 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 					}
 				} else if (vec.contains("*") != -1) {
 					auto pos = vec.contains("*");
-					if ((vec[pos-1] != "=") || (vec[pos+1] != "=")) {
-						idClass v1 = new idClass();
+					idClass v1 = new idClass();
+					idClass v2 = new idClass();
+					if ((vec[pos-1] != "=") && (vec[pos+1] != "=")) {
 						v1.set_str(vec[pos-1]);
-						idClass v2 = new idClass();
 						v2.set_str(vec[pos+1]);
+					} else {
+						// *=
+						if (vec[pos+1] == "=") {
+							temp.set_str(vec[pos-1]);
+							v1.set_str(vec[pos-1]);
+							if ((pos+2) > size) {
+								logWriteln(logLevel.fatalError, "Statement malformed.");
+								exit(1);
+							}
+							v2.set_str(vec[pos+2]);
+						}
 						expressionClass expr = new expressionClass(op.mul, v1, v2);
 						temp.set_expr(expr);
 						lists ~= temp;
+
 					}
 				} else if (vec.contains("/") != -1) {
 					auto pos = vec.contains("/");
