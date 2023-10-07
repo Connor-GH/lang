@@ -86,7 +86,7 @@ ifneq ($(DCC), gdc)
  $(error dmd and clang together are note supported due to mangling.)
     endif
 	_LD_DFLAGS += -L-lphobos2
-	_DFLAGS += -O -mcpu=$(D_MCPU)
+	_DFLAGS += -O -mcpu=$(D_MCPU_DMD)
   else # is ldc
 	_DFLAGS += -O4 -mcpu=$(MARCH)
 	_LD_DFLAGS += -L-lstdc++ -release
