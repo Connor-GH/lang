@@ -19,10 +19,11 @@ _DFLAGS =
 
 ifeq ($(RELEASE),true)
 	_COMMON_CFLAGS = -march=$(MARCH)
-	D_MCPU = baseline
+	D_MCPU_DMD = baseline
 else
 	_COMMON_CFLAGS = -march=native
-	D_MCPU = native
+	D_MCPU_DMD = native
+	MARCH = native
 endif
 _LFLAGS  =
 
@@ -40,12 +41,13 @@ ifeq ($(shell $(CC) -v 2>&1 | grep -c "gcc version"), 1)
 else ifeq ($(shell $(CC) -v 2>&1 | grep -c "clang version"), 1)
 	include clang_chosen.mk
 	ifeq ($(DEBUG),true)
+	# temporarily disable
 	# clang-specific security/debug flags
-	_COMMON_CFLAGS += -fsanitize=undefined,signed-integer-overflow,null,alignment,address,leak,cfi \
-				  -fsanitize-undefined-trap-on-error -ftrivial-auto-var-init=zero \
-				  -mspeculative-load-hardening -mretpoline
+	#_COMMON_CFLAGS += -fsanitize=undefined,signed-integer-overflow,null,alignment,address,leak,cfi \
+	#			  -fsanitize-undefined-trap-on-error -ftrivial-auto-var-init=zero \
+	#			  -mspeculative-load-hardening -mretpoline
 
-		_LFLAGS  = -fsanitize=address
+	#	_LFLAGS  = -fsanitize=address
 endif #debug
 
 	_COMMON_CFLAGS += $(_WFLAGS)
@@ -77,15 +79,16 @@ _LD_DFLAGS =
 # LTO will be turned on later
 ifneq ($(DCC), gdc)
 	DCC_BASIC_O = -of=
-	_DFLAGS +=  -O -mcpu=$(D_MCPU) $(DFLAGS) -release -extern-std=$(CXX_STD)
+	_DFLAGS += -release -extern-std=$(CXX_STD)
 	_LD_DFLAGS += -L-lstdc++
   ifeq ($(DCC),dmd)
     ifeq ($(CC), clang)
  $(error dmd and clang together are note supported due to mangling.)
     endif
 	_LD_DFLAGS += -L-lphobos2
+	_DFLAGS += -O -mcpu=$(D_MCPU)
   else # is ldc
-	_DFLAGS += -O4
+	_DFLAGS += -O4 -mcpu=$(MARCH)
 	_LD_DFLAGS += -L-lstdc++ -release
     ifeq ($(CC), clang)
     ifeq ($(DEBUG),true)
@@ -108,3 +111,4 @@ else
 	_LD_DFLAGS += -lstdc++ -lgphobos
 	GDC_XD = -xd
 endif # if gdc
+_DFLAGS += $(DFLAGS)
