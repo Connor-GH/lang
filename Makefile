@@ -73,6 +73,8 @@ driver:
 		's/{{\[sed_name\]}}/$(PACKAGE_NAME_NOTSTRING)/g' | $(DCC) $(GDC_XD) - \
 		$(DCC_BASIC_C) $(DCC_BASIC_O)$(OBJDIR)/cc.o $(the_DFLAGS)
 
+tools:
+	cd tests/tools; $(MAKE)
 $(OBJDIR)/%.o : $(SRCDIR)/%.d | $(OBJDIR)
 	$(DCC) $(DCC_BASIC_O)$@ $(the_DFLAGS) $^ $(DCC_BASIC_C)
 

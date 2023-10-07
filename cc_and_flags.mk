@@ -73,27 +73,38 @@ _COMMON_CFLAGS += $(COMMON_FLAGS) $(COMMON_FLAGS_C) -D_PACKAGE_NAME=\"$(PACKAGE_
 _CXXFLAGS = $(_COMMON_CFLAGS) -std=$(CXX_STD) $(CXXFLAGS)
 _CFLAGS = $(_COMMON_CFLAGS) -std=$(C_STD) $(CFLAGS)
 _LFLAGS += -L/usr/local/lib $(LDFLAGS)
+_LD_DFLAGS =
+# LTO will be turned on later
 ifneq ($(DCC), gdc)
 	DCC_BASIC_O = -of=
-	_DFLAGS += -O -mcpu=$(D_MCPU) $(DFLAGS)
-	_LD_DFLAGS = -L-lphobos2 -L-lstdc++
+	_DFLAGS +=  -O -mcpu=$(D_MCPU) $(DFLAGS) -release -extern-std=$(CXX_STD)
+	_LD_DFLAGS += -L-lstdc++
   ifeq ($(DCC),dmd)
-    ifeq ($(CC),gcc)
-	_CFLAGS += $(LTO)
-	_CXXFLAGS += $(LTO)
-    endif # if gcc
+    ifeq ($(CC), clang)
+ $(error dmd and clang together are note supported due to mangling.)
+    endif
+	_LD_DFLAGS += -L-lphobos2
   else # is ldc
-    ifeq ($(CC),clang)
-	_CFLAGS += $(LTO)
-	_CXXFLAGS += $(LTO)
-    endif # if clang
+	_DFLAGS += -O4
+	_LD_DFLAGS += -L-lstdc++ -release
+    ifeq ($(CC), clang)
+    ifeq ($(DEBUG),true)
+	__DEBUG_FLAGS_LLVM = -fsanitize=address,leak
+	_DFLAGS +=  $(__DEBUG_FLAGS_LLVM) -Xcc="-fsplit-lto-unit"
+	_CFLAGS +=  $(__DEBUG_FLAGS_LLVM) -fsplit-lto-unit
+	_CXXFLAGS += $(__DEBUG_FLAGS_LLVM) -fsplit-lto-unit
+	_LD_DFLAGS += $(__DEBUG_FLAGS_LLVM) -Xcc=-fsplit-lto-unit -Xcc="-fsanitize=address,leak"
+    endif
+	  _DFLAGS += $(LTO)
+	  _CFLAGS += $(LTO)
+	  _CXXFLAGS += $(LTO)
+	  _LD_DFLAGS += $(LTO)
+    endif
+
   endif # if dmd/ldc
 else
-  ifeq ($(CC),gcc)
-	_CFLAGS += $(LTO)
-	_CXXFLAGS += $(LTO)
-  endif
-	_DFLAGS += $(COMMON_FLAGS) -march=$(MARCH) $(DFLAGS)
-	_LD_DFLAGS = -lstdc++
+	_DFLAGS += $(COMMON_FLAGS) -march=$(MARCH) $(DFLAGS) \
+			   -fextern-std=$(CXX_STD) -frelease
+	_LD_DFLAGS += -lstdc++ -lgphobos
 	GDC_XD = -xd
 endif # if gdc

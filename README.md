@@ -2,7 +2,18 @@
 
 progress so far:
 
-- code parser works - ~12000 lines parsed per second
+code parser works:
+
+- ~135000 lines parsed per second (gcc/gdc)
+
+- ~188000 lines parsed per second (ldc2/clang LTO)
+
+# incompatabilities
+
+- Dmd and clang are not supported in tandem.
+- DEBUG=true for ldc/clang does not work right now due to some flags messing with linking.
+
+
 
 WIP/needs work:
 - driver parsing - WIP

@@ -33,7 +33,8 @@ remove_portion_of_buffer_and_merge(std::string initbuf, size_t start,
 
 	start_portion = initbuf.substr(0, (initbuf.find(begin_comment) != std::string::npos) ? start - 1 : start);
 
-	end_portion = initbuf.substr(end + 1, initbuf.length() - 1);
+	if (end < initbuf.length()-1)
+		end_portion = initbuf.substr(end + 1, initbuf.length() - 1);
 	initbuf.clear();
 	initbuf = start_portion + end_portion;
 
@@ -50,7 +51,7 @@ has_end_comment(std::string buf)
 	idx_of_end_comment = buf.find(end_comment);
 	if (buf.rfind(end_comment) != idx_of_end_comment)
 		parsing_err(ERROR, "Nested comments are not supported.", buf.c_str(),
-					buf.rfind(end_comment)/*, file, line_no*/);
+					buf.rfind(end_comment));
 	if (idx_of_end_comment != std::string::npos) {
 		is_in_comment = 0;
 		return idx_of_end_comment + 1;
@@ -67,7 +68,7 @@ has_begin_comment(std::string buf)
 	idx_of_begin_comment = buf.find(begin_comment);
 	if (buf.rfind(begin_comment) != idx_of_begin_comment)
 		parsing_err(ERROR, "Nested comments are not supported.", buf.c_str(),
-					buf.rfind(begin_comment)/*, file, line_no*/);
+					buf.rfind(begin_comment));
 	if (idx_of_begin_comment != std::string::npos) {
 		is_in_comment = 1;
 		return idx_of_begin_comment + 1;
