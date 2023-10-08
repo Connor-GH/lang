@@ -1,12 +1,12 @@
 module idClass;
-import std.stdio;
+import std.stdio : writeln;
 import logWriteln : logWriteln, logLevel;
 import expressionClass : expressionClass, op;
 
 
 class idClass {
 	// the entire class wraps around this struct
-	struct id {
+	private struct id {
 		string str = "";
 		string init = "";
 		expressionClass expr;
@@ -24,7 +24,7 @@ class idClass {
 			return "struct id:\n.str: " ~  this.get_str() ~ "\n.init: " ~
 				this.get_init() ~ "\n.expr: " ~ "(uninitialized)\n";
 		} else {
-			expressionClass tmp = new expressionClass(
+			scope expressionClass tmp = new expressionClass(
 					this.get_expr().get_operator_(),
 					this.get_expr().get_value1(),
 					this.get_expr().get_value2());

@@ -1,9 +1,9 @@
-import std.stdio;
-import std.conv;
+import std.stdio : writeln;
+import std.conv : to;
 import std.string : toStringz;
 import core.memory : GC;
-import core.stdc.stdlib;
-import core.stdcpp.string;
+import core.stdc.stdlib : exit;
+import core.stdcpp.string : basic_string, char_traits;
 import idClass : idClass;
 import expressionClass : expressionClass, op;
 import parsingError;

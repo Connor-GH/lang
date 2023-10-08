@@ -112,3 +112,4 @@ else
 	GDC_XD = -xd
 endif # if gdc
 _DFLAGS += $(DFLAGS)
+_LD_DFLAGS += $(LDFLAGS) $(LFLAGS)

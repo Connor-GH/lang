@@ -1,6 +1,5 @@
 module expressionClass;
-import std.stdio;
-import std.typecons;
+import std.stdio : writeln;
 import idClass : idClass;
 import logWriteln : logWriteln, logLevel;
 import sharedIdentifiers;
@@ -26,7 +25,7 @@ enum op {
 
 class expressionClass {
 	// the entire class wraps around this struct
-	struct expression {
+	private struct expression {
 		op operator_;
 		idClass value1;
 		idClass value2;
@@ -42,9 +41,9 @@ override string toString() {
 	if (this.get_operator_() == op.uninitialized) {
 		writeln("BAD");
 	}
-	idClass v1 = new idClass(this.get_value1().get_str(),
+	scope idClass v1 = new idClass(this.get_value1().get_str(),
 			this.get_value1().get_init(), this.get_value1().get_expr());
-	idClass v2 = new idClass(this.get_value2().get_str(),
+	scope idClass v2 = new idClass(this.get_value2().get_str(),
 			this.get_value2().get_init(), this.get_value2().get_expr());
 	return "struct expression:\n.operator_: " ~ this.get_operator__str() ~
 		"\n.value1: " ~ v1.toString() ~ "\n.value2: " ~ v2.toString();
@@ -52,7 +51,7 @@ override string toString() {
 op get_operator_() const {
 	return underlying_struct.operator_;
 }
-string get_operator__str() const {
+private string get_operator__str() const {
 string[op] op_arr_rev = [
 		op.equals: eq_identifier,
 		op.add: add_identifier,

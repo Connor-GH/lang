@@ -5,5 +5,5 @@ extern(C) void set_file(const char *file);
 extern(C) void set_line_number(const size_t number);
 extern(C) const(char *)get_buffer();
 extern(C) void set_buffer(const char *buffer);
-immutable int ERROR = 127;
-immutable int WARNING = 1;
+immutable char ERROR = 127;
+immutable char WARNING = 1;
