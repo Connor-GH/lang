@@ -15,7 +15,7 @@ class idClass {
 	this() {
 		underlying_struct = id("", "", null);
 	}
-	this(string str, string init, expressionClass expr) {
+	this(string str, string init, ref expressionClass expr) {
 			underlying_struct = id(str, init, expr);
 	}
 	override string toString() {
@@ -38,7 +38,7 @@ class idClass {
 	void set_init(string init) {
 		underlying_struct.init = init;
 	}
-	void set_expr(expressionClass expr) {
+	void set_expr(ref expressionClass expr) {
 		underlying_struct.expr = expr;
 	}
 	string get_str() const {
@@ -47,7 +47,7 @@ class idClass {
 	string get_init() const {
 		return underlying_struct.init;
 	}
-	expressionClass get_expr() {
+	ref expressionClass get_expr() {
 		return underlying_struct.expr;
 	}
 

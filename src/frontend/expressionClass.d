@@ -34,7 +34,7 @@ class expressionClass {
 this() {
 	underlying_struct = expression(op.uninitialized, null, null);
 }
-this(op operator_, idClass value1, idClass value2) {
+this(op operator_, ref idClass value1, ref idClass value2) {
 	underlying_struct = expression(operator_, value1, value2);
 }
 override string toString() {
@@ -52,39 +52,38 @@ op get_operator_() const {
 	return underlying_struct.operator_;
 }
 private string get_operator__str() const {
-string[op] op_arr_rev = [
-		op.equals: eq_identifier,
-		op.add: add_identifier,
-		op.sub: sub_identifier,
-		op.mul: mul_identifier,
-		op.div: div_identifier,
-		op.mod: mod_identifier,
-		op.rShift: rs_identifier,
-		op.lShift: ls_identifier,
-		op.addEquals: addeq_identifier,
-		op.subEquals: subeq_identifier,
-		op.mulEquals: muleq_identifier,
-		op.divEquals: diveq_identifier,
-		op.modEquals: modeq_identifier,
-		op.rShiftEquals: rseq_identifier,
-		op.lShiftEquals: lseq_identifier,
-		op.uninitialized: "(uninitialized)"
-	];
-	return op_arr_rev[this.get_operator_()];
+	final switch (this.get_operator_()) {
+	case op.equals: return eq_identifier;
+	case op.add: return add_identifier;
+	case op.sub: return sub_identifier;
+	case op.mul: return mul_identifier;
+	case op.div: return div_identifier;
+	case op.mod: return mod_identifier;
+	case op.rShift: return rs_identifier;
+	case op.lShift: return ls_identifier;
+	case op.addEquals: return addeq_identifier;
+	case op.subEquals: return subeq_identifier;
+	case op.mulEquals: return muleq_identifier;
+	case op.divEquals: return diveq_identifier;
+	case op.modEquals: return modeq_identifier;
+	case op.rShiftEquals: return rseq_identifier;
+	case op.lShiftEquals: return lseq_identifier;
+	case op.uninitialized: return "(uninitialized)";
+	}
 }
-idClass get_value1() {
+ref idClass get_value1() {
 	return underlying_struct.value1;
 }
-idClass get_value2() {
+ref idClass get_value2() {
 	return underlying_struct.value2;
 }
 void set_operator_(op operator_) {
 	underlying_struct.operator_ = operator_;
 }
-void set_value1(idClass value2) {
+void set_value1(ref idClass value2) {
 	underlying_struct.value2 = value2;
 }
-void set_value2(idClass value2) {
+void set_value2(ref idClass value2) {
 	underlying_struct.value2 = value2;
 }
 ~this() {

@@ -4,9 +4,9 @@ progress so far:
 
 code parser works:
 
-- ~135000 lines parsed per second (gcc/gdc)
+- ~155000 lines parsed per second (gcc/gdc)
 
-- ~188000 lines parsed per second (ldc2/clang LTO)
+- ~218000 lines parsed per second (ldc2/clang LTO)
 
 # incompatabilities
 
