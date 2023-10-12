@@ -1,11 +1,10 @@
-
 import std.stdio : writeln, stderr;
-import std.string : indexOf;
+import std.string : indexOf, toStringz;
 import std.getopt;
 import core.memory : GC;
 import core.stdc.stdlib : exit, getenv, EXIT_SUCCESS;
 
-extern (C++) void enter_block_and_parse(const(char *)file);
+extern (C++) void enter_block_and_parse(const(char) *file);
 static const fail = 1;
 
 static void
@@ -14,16 +13,15 @@ open_file_to_compile(string file)
 	if (!file) {
 		exit(1);
 	} else {
-		enter_block_and_parse(cast(char *)file);
+		enter_block_and_parse(file.toStringz());
 	}
 }
 int
 main(string[] args)
 {
-	string[] output;
+	string output;
 	string progname = "{{[sed_name]}}";
 	string progversion = "{{[sed_version]}}";
-	arraySep = " ";
 	bool ver = false;
 	bool verbose = false;
 	bool force = false;
@@ -54,10 +52,11 @@ main(string[] args)
 	} else if (verbose) {
 		/* does nothing for now */
 	} else if (output) {
-		for (size_t i = 0; i < output.length; i++) {
-			if ((indexOf(output[i], ".fo") != -1) || (force && (i > 0))) {
-				open_file_to_compile(output[i]);
-			} else if (output[i] == "-") {
+		writeln("Name of output file: ", output);
+		for (size_t i = 1; i < args.length; i++) {
+			if ((indexOf(args[i], ".fo") != -1) || force) {
+				open_file_to_compile(args[i]);
+			} else if (args[i] == "-") {
 				open_file_to_compile("stdin");
 			}
 		}
