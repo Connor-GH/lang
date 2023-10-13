@@ -32,21 +32,27 @@ class idClass {
 				this.get_init() ~ "\n.expr: " ~ tmp.toString() ~ "\n";
 		}
 	}
+	@nogc @safe
 	void set_str(string str) {
 		underlying_struct.str = str;
 	}
+	@nogc @safe
 	void set_init(string init) {
 		underlying_struct.init = init;
 	}
+	@nogc @safe
 	void set_expr(ref expressionClass expr) {
 		underlying_struct.expr = expr;
 	}
+	@nogc @safe
 	string get_str() const {
 		return underlying_struct.str;
 	}
+	@nogc @safe
 	string get_init() const {
 		return underlying_struct.init;
 	}
+	@nogc @safe
 	ref expressionClass get_expr() {
 		return underlying_struct.expr;
 	}

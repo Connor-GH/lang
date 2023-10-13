@@ -82,7 +82,7 @@ enter_block_and_parse(char const *file)
 {
 	std::ifstream fp;
 	size_t start = 0, end = 0;
-	std::string initbuf;
+	std::vector<std::string> initbuf_vec;
 	std::string tmp_buf;
 	int error_num;
 	if (strcmp(file, "stdin") != 0) {
@@ -97,7 +97,16 @@ enter_block_and_parse(char const *file)
 	} else {
 		set_file("stdin");
 	}
-	while (std::getline((strcmp(file, "stdin") == 0) ? std::cin : fp, initbuf)) {
+	std::string temporary;
+	for (size_t i = 0; std::getline((strcmp(file, "stdin") == 0) ? std::cin : fp, temporary); i++) {
+		if (fp.good())
+			initbuf_vec.push_back(temporary);
+	}
+	// close file early and just keep internal array
+	fp.close();
+
+	for (std::string initbuf : initbuf_vec) {
+
 		line_no++;
 		set_line_number(line_no);
 		set_buffer(initbuf.c_str());
@@ -119,6 +128,21 @@ enter_block_and_parse(char const *file)
 			initbuf, 0, initbuf.length() - 1);
 		}
 
+		if (initbuf.find(";") == std::string::npos) {
+			tmp_buf += initbuf;
+			continue;
+		}
+
+		if (!tmp_buf.empty()) {
+			tmp_buf += initbuf;
+			if (tmp_buf.find(";") == std::string::npos)
+				parsing_err(ERROR, "Expected `;'", tmp_buf.c_str(),
+				tmp_buf.length()-1);
+			else {
+				initbuf = tmp_buf;
+				tmp_buf = "";
+			}
+		}
 
 		// raw line without any parsing
 		if (!initbuf.empty())
@@ -143,10 +167,5 @@ enter_block_and_parse(char const *file)
 			tokens_into_lists(str, size);
 			delete[] str;
 		}
-
-
-	}
-	if (strcmp(file, "stdin") != 0) {
-		fp.close();
 	}
 }

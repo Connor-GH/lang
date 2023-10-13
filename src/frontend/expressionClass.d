@@ -48,9 +48,11 @@ override string toString() {
 	return "struct expression:\n.operator_: " ~ this.get_operator__str() ~
 		"\n.value1: " ~ v1.toString() ~ "\n.value2: " ~ v2.toString();
 }
+@nogc @safe
 op get_operator_() const {
 	return underlying_struct.operator_;
 }
+@nogc @safe
 private string get_operator__str() const {
 	final switch (this.get_operator_()) {
 	case op.equals: return eq_identifier;
@@ -71,18 +73,23 @@ private string get_operator__str() const {
 	case op.uninitialized: return "(uninitialized)";
 	}
 }
+@nogc @safe
 ref idClass get_value1() {
 	return underlying_struct.value1;
 }
+@nogc @safe
 ref idClass get_value2() {
 	return underlying_struct.value2;
 }
+@nogc @safe
 void set_operator_(op operator_) {
 	underlying_struct.operator_ = operator_;
 }
+@nogc @safe
 void set_value1(ref idClass value2) {
 	underlying_struct.value2 = value2;
 }
+@nogc @safe
 void set_value2(ref idClass value2) {
 	underlying_struct.value2 = value2;
 }

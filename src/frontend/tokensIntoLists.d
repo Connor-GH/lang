@@ -10,6 +10,7 @@ import parsingError;
 import logWriteln : logWriteln, logLevel;
 
 /// Returns the index of string in array, returns -1 if not found
+@nogc @safe
 static long contains(string[] v, string s) {
 	foreach (i, str; v) {
 		if (str == s)
@@ -99,6 +100,4 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 	}
 	foreach (id; lists)
 		logWriteln(logLevel.error, id);
-
-	//GC.collect();
 }

@@ -2,7 +2,7 @@ import std.stdio : writeln, stderr;
 import std.string : indexOf, toStringz;
 import std.getopt;
 import core.memory : GC;
-import core.stdc.stdlib : exit, getenv, EXIT_SUCCESS;
+import core.stdc.stdlib : exit, EXIT_SUCCESS;
 
 extern (C++) void enter_block_and_parse(const(char) *file);
 static const fail = 1;

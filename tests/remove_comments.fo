@@ -16,3 +16,11 @@ a = b + c;
 a = /* = */b + c;
 
 
+a = b - c;
+a/* this is fine */
+=
+b
++
+c
+;
+

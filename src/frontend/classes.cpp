@@ -20,11 +20,11 @@ static int is_in_equals = 0;
 
 /// monolithic function that takes a delim array and splits terms.
 static inline void getline_string_delim(std::vector<std::string>& result,
-		std::stringstream& stream, std::string& str, std::vector<std::string> delim_arr) {
+		std::stringstream stream, std::string& str, std::vector<std::string> delim_arr) {
 	std::string s = "";
 	std::string tmp1 = "";
 
-	for (ssize_t j = 0; stream.good(); j++) {
+	while (stream.good()) {
 		size_t k = 0;
 		for (std::string delim : delim_arr) {
 			while (k < delim.size()) {
