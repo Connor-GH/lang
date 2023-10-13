@@ -33,7 +33,7 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 
 
 
-	idClass[] lists;
+	scope idClass[] lists;
 	foreach (i, str; vec) {
 		if (str == "=") {
 			if (i > 0) {
@@ -98,6 +98,8 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 
 		}
 	}
-	foreach (id; lists)
+	foreach (id; lists) {
 		logWriteln(logLevel.error, id);
+		id.destroy();
+	}
 }
