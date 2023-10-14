@@ -8,11 +8,6 @@ code parser works:
 
 - ~218000 lines parsed per second (ldc2/clang LTO)
 
-# incompatabilities
-
-- Dmd and clang are not supported in tandem.
-- DEBUG=true for ldc/clang does not work right now due to some flags messing with linking.
-
 
 
 WIP/needs work:

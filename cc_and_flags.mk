@@ -41,13 +41,12 @@ ifeq ($(shell $(CC) -v 2>&1 | grep -c "gcc version"), 1)
 else ifeq ($(shell $(CC) -v 2>&1 | grep -c "clang version"), 1)
 	include clang_chosen.mk
 	ifeq ($(DEBUG),true)
-	# temporarily disable
-	# clang-specific security/debug flags
-	#_COMMON_CFLAGS += -fsanitize=undefined,signed-integer-overflow,null,alignment,address,leak,cfi \
-	#			  -fsanitize-undefined-trap-on-error -ftrivial-auto-var-init=zero \
-	#			  -mspeculative-load-hardening -mretpoline
+	 # clang-specific security/debug flags
+	 # CFI not supported with ldc2
+	 __LLVM_C_FLAGS = -fsanitize=undefined,signed-integer-overflow,null,alignment,address,leak
+	 _COMMON_CFLAGS += $(__LLVM_C_FLAGS) -fsanitize-undefined-trap-on-error -ftrivial-auto-var-init=zero \
+				  -mspeculative-load-hardening -mretpoline
 
-	#	_LFLAGS  = -fsanitize=address
 endif #debug
 
 	_COMMON_CFLAGS += $(_WFLAGS)
@@ -82,9 +81,6 @@ ifneq ($(DCC), gdc)
 	_DFLAGS += -release -extern-std=$(CXX_STD)
 	_LD_DFLAGS += -L-lstdc++
   ifeq ($(DCC),dmd)
-    ifeq ($(CC), clang)
- $(error dmd and clang together are note supported due to mangling.)
-    endif
 	_LD_DFLAGS += -L-lphobos2
 	_DFLAGS += -O -mcpu=$(D_MCPU_DMD)
   else # is ldc
@@ -94,14 +90,14 @@ ifneq ($(DCC), gdc)
     ifeq ($(DEBUG),true)
 	__DEBUG_FLAGS_LLVM = -fsanitize=address,leak
 	_DFLAGS +=  $(__DEBUG_FLAGS_LLVM) -Xcc="-fsplit-lto-unit"
-	_CFLAGS +=  $(__DEBUG_FLAGS_LLVM) -fsplit-lto-unit
-	_CXXFLAGS += $(__DEBUG_FLAGS_LLVM) -fsplit-lto-unit
-	_LD_DFLAGS += $(__DEBUG_FLAGS_LLVM) -Xcc=-fsplit-lto-unit -Xcc="-fsanitize=address,leak"
+	_CFLAGS += -fsplit-lto-unit
+	_CXXFLAGS += -fsplit-lto-unit
+	_LD_DFLAGS += $(__DEBUG_FLAGS_LLVM) -Xcc=-fsplit-lto-unit -Xcc="$(__LLVM_C_FLAGS)"
     endif
 	  _DFLAGS += $(LTO)
 	  _CFLAGS += $(LTO)
 	  _CXXFLAGS += $(LTO)
-	  _LD_DFLAGS += $(LTO)
+	  _LD_DFLAGS += $(LTO) -Xcc="$(LTO)"
     endif
 
   endif # if dmd/ldc
@@ -112,4 +108,4 @@ else
 	GDC_XD = -xd
 endif # if gdc
 _DFLAGS += $(DFLAGS)
-_LD_DFLAGS += $(LDFLAGS) $(LFLAGS)
+_LD_DFLAGS += -L-O2 $(LDFLAGS) $(LFLAGS)
