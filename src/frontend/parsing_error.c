@@ -17,6 +17,7 @@ void set_line_number(const size_t number) {
 void set_buffer(const char *buffer) {
 	buffer_ = buffer;
 }
+__attribute__((pure))
 const char *get_buffer(void) {
 	return buffer_;
 }

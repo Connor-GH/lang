@@ -149,7 +149,7 @@ enter_block_and_parse(char const *file)
 			std::cout << initbuf << std::endl;
 
 
-		if (has_assignment(initbuf, file, line_no) < initbuf.length()) {
+		if (has_assignment(initbuf) < initbuf.length()) {
 			std::vector<std::string> vec = tokenize_assignment_expression(initbuf);
 			// line tokenized
 			for (std::string s : vec)

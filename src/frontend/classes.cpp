@@ -102,7 +102,7 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf) {
 }
 
 
-size_t has_assignment(std::string buf, const char *file, size_t line_no) {
+size_t has_assignment(std::string buf) {
 /* identifier is split for the sake of bootstrapping */
 	size_t idx_of_equals = 0;
 	if (buf.empty())
