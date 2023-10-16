@@ -69,6 +69,7 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf) {
 	std::string tmp;
 
 	std::vector<std::string> delim_arr = {
+		" ",
 		eq_identifier,
 		add_identifier,
 		sub_identifier,
@@ -78,8 +79,8 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf) {
         subeq_identifier,
         muleq_identifier,
         diveq_identifier,
-		";",
-	 	" "
+		";"//,
+	 	//" "
 	};
 	/* tokenize based on =+*-/; */
 	getline_string_delim(result, ss, tmp, delim_arr);

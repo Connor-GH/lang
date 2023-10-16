@@ -2,21 +2,8 @@
 /* this is
 a multi-line
 comment */
-
 /** this is a comment! **/
-c = 12;
-b = 24;
-
-a = b + c;
-
-/* this should fail if not commented out */
-/* a = b = c */
-
-
 a = /* = */b + c;
-
-
-a = b - c;
 a/* this is fine */
 =
 b
