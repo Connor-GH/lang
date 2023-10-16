@@ -75,12 +75,17 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf) {
 		sub_identifier,
         mul_identifier,
         div_identifier,
+		mod_identifier,
+		rs_identifier,
+		ls_identifier,
         addeq_identifier,
         subeq_identifier,
         muleq_identifier,
         diveq_identifier,
-		";"//,
-	 	//" "
+		modeq_identifier,
+		rseq_identifier,
+		lseq_identifier,
+		";"
 	};
 	/* tokenize based on =+*-/; */
 	getline_string_delim(result, ss, tmp, delim_arr);

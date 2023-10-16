@@ -8,6 +8,7 @@ import idClass : idClass;
 import expressionClass : expressionClass, op;
 import parsingError;
 import logWriteln : logWriteln, logLevel;
+import ir;
 
 /// Returns the index of string in array, returns -1 if not found
 @nogc @safe
@@ -100,6 +101,7 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 	}
 	foreach (id; lists) {
 		logWriteln(logLevel.error, id);
+		gen_ir(id);
 		id.destroy();
 	}
 }
