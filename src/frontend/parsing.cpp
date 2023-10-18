@@ -129,7 +129,7 @@ enter_block_and_parse(char const *file)
 		}
 
 		if (initbuf.find(";") == std::string::npos) {
-			tmp_buf += initbuf;
+			tmp_buf += initbuf + " ";
 			continue;
 		}
 
@@ -149,23 +149,21 @@ enter_block_and_parse(char const *file)
 			std::cout << initbuf << std::endl;
 
 
-		if (has_assignment(initbuf) < initbuf.length()) {
-			std::vector<std::string> vec = tokenize_assignment_expression(initbuf);
-			// line tokenized
-			for (std::string s : vec)
-				std::cout << s << ", ";
-			std::cout << "\n";
-			// D binding info
-			size_t size = vec.size();
-			// allocate memory for binding into D
-			std::string *str = new std::string[size];
-			for (size_t i = 0; i < size; i++) {
-				str[i] = vec[i];
-			}
-			// this prints each token on a separate line and
-			// also the classes that are built
-			tokens_into_lists(str, size);
-			delete[] str;
+		std::vector<std::string> vec = tokenize_assignment_expression(initbuf);
+		// line tokenized
+		for (std::string s : vec)
+			std::cout << s << ", ";
+		std::cout << "\n";
+		// D binding info
+		size_t size = vec.size();
+		// allocate memory for binding into D
+		std::string *str = new std::string[size];
+		for (size_t i = 0; i < size; i++) {
+			str[i] = vec[i];
 		}
+		// this prints each token on a separate line and
+		// also the classes that are built
+		tokens_into_lists(str, size);
+		delete[] str;
 	}
 }

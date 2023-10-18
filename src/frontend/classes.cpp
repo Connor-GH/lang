@@ -106,24 +106,3 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf) {
 
 	return result;
 }
-
-
-size_t has_assignment(std::string buf) {
-/* identifier is split for the sake of bootstrapping */
-	size_t idx_of_equals = 0;
-	if (buf.empty())
-		return buf.length() + 1;
-
-	idx_of_equals = buf.find(eq_identifier);
-	if (buf.rfind(eq_identifier) != idx_of_equals) {
-		std::string errmsg = "Multiple assignments in one statement unimplemented.";
-		parsing_err(ERROR, errmsg.c_str(),
-				buf.c_str(), buf.rfind(eq_identifier));
-	}
-
-	if (idx_of_equals != std::string::npos) {
-		is_in_equals = 1;
-		return idx_of_equals + 1;
-	}
-	return buf.length() + 1;
-}
