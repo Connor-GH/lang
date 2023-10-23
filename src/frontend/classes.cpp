@@ -1,21 +1,13 @@
-#include <iostream>
 #include <sstream>
-#include <fstream>
 #include <string>
 #include <vector>
-#include <memory>
-#include <map>
 
 #include <cctype>
-#include <cstdlib>
 
 #include "parsing_error.h"
 #include "classes.hpp"
 #include "sharedIdentifiers.hpp"
 
-
-
-static int is_in_equals = 0;
 
 
 /// monolithic function that takes a delim array and splits terms.
