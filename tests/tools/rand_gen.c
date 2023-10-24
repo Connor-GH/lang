@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void main(void) {
-	char *options[] = {
+int main(void) {
+	const char *options[] = {
 		"boo = boo * c;",
 		"ayy = bee;",
 		"b = b << c;",
@@ -19,4 +19,5 @@ void main(void) {
 		srand(rand());
 		printf("%s\n", options[rand() % 8]);
 	}
+	return 0;
 }

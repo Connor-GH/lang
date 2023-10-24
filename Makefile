@@ -4,12 +4,11 @@ PACKAGE_NAME = "$(PACKAGE_NAME_NOTSTRING)"
 TARGET = lang
 PACKAGE_VERSION = 0.0.1
 C_STD ?= c11
-# std::string constexpr
 CXX_STD ?= c++11
 # setting up sources
-SRCDIR = src
-OBJDIR = obj
-BINDIR = bin
+SRCDIR = $(shell pwd)/src
+OBJDIR = $(shell pwd)/obj
+BINDIR = $(shell pwd)/bin
 SRCDIR_FRONTEND = $(SRCDIR)/frontend
 SRCDIR_BACKEND_ = $(SRCDIR)/backend
 SRCDIR_LIBLANG = $(SRCDIR)/liblang
@@ -74,7 +73,9 @@ driver:
 		$(DCC_BASIC_C) $(DCC_BASIC_O)$(OBJDIR)/cc.o $(the_DFLAGS)
 
 tools:
-	cd tests/tools; $(MAKE)
+	export DCC="$(DCC)"; export CC="$(CC)"; export DCC_BASIC_O="$(DCC_BASIC_O)"; \
+		export the_DFLAGS='$(the_DFLAGS)'; export the_CFLAGS='$(the_CFLAGS)'; \
+		export BINDIR="$(BINDIR)"; cd tests/tools; $(MAKE)
 $(OBJDIR)/%.o : $(SRCDIR)/%.d | $(OBJDIR)
 	$(DCC) $(DCC_BASIC_O)$@ $(the_DFLAGS) $^ $(DCC_BASIC_C)
 

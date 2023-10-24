@@ -1,5 +1,5 @@
-#ifndef SHARED_IDENTIFIERS_HPP
-#define SHARED_IDENTIFIERS_HPP
+#ifndef src_frontend_sharedIdentifiers_hpp
+#define src_frontend_sharedIdentifiers_hpp
 #include <string>
 const std::string eq_identifier = "=";
 const std::string add_identifier = "+";
@@ -16,4 +16,10 @@ const std::string diveq_identifier = "/=";
 const std::string modeq_identifier = "%=";
 const std::string rseq_identifier = ">>=";
 const std::string lseq_identifier = "<<=";
-#endif
+const std::string left_paren = "(";
+const std::string right_paren = ")";
+const std::string left_sq_brace = "[";
+const std::string right_sq_brace = "]";
+const std::string left_curly_brace = "{";
+const std::string right_curly_brace = "}";
+#endif /* src_frontend_sharedIdentifiers_hpp */

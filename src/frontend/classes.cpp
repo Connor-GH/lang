@@ -77,6 +77,12 @@ std::vector<std::string> tokenize_assignment_expression(std::string buf) {
 		modeq_identifier,
 		rseq_identifier,
 		lseq_identifier,
+		right_paren,
+		left_paren,
+		right_sq_brace,
+		left_sq_brace,
+		right_curly_brace,
+		left_curly_brace,
 		";"
 	};
 	/* tokenize based on =+*-/; */
