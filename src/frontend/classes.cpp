@@ -34,6 +34,7 @@ static inline void getline_string_delim(std::vector<std::string>& result,
 				s.clear();
 				result.push_back(tmp1);
 				tmp1.clear();
+				k--;
 			}
 		}
 		if (stream.eof()) {
@@ -42,6 +43,7 @@ static inline void getline_string_delim(std::vector<std::string>& result,
 			s.clear();
 			result.push_back(tmp1);
 			tmp1.clear();
+			k--;
 		} else {
 			s += tmp1;
 			tmp1.clear();
