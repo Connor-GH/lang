@@ -22,6 +22,20 @@ enum op {
 	lShiftEquals,
 };
 
+op toOperator_(string arg) {
+	with (op) {
+		switch (arg) {
+			case add_identifier: return add;
+			case sub_identifier: return sub;
+			case mul_identifier: return mul;
+			case div_identifier: return div;
+			case mod_identifier: return mod;
+			case rs_identifier: return rShift;
+			case ls_identifier: return lShift;
+			default: return op.uninitialized;
+		}
+	}
+}
 
 class expressionClass {
 	// the entire class wraps around this struct
