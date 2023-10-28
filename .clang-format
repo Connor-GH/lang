@@ -96,7 +96,7 @@ PenaltyBreakBeforeFirstCallParameter: 30
 PenaltyBreakComment: 10
 PenaltyBreakFirstLessLess: 0
 PenaltyBreakString: 10
-PenaltyExcessCharacter: 100
+PenaltyExcessCharacter: 80
 PenaltyReturnTypeOnItsOwnLine: 60
 
 PointerAlignment: Right
@@ -117,7 +117,7 @@ SpacesInContainerLiterals: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: Cpp03
+Standard: Cpp11
 TabWidth: 4
 UseTab: Always
 ...

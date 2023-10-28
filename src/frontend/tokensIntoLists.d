@@ -237,7 +237,7 @@ alias stdcpp_string = basic_string!(char, char_traits!char);
 	}
 	foreach (id; lists) {
 		logWriteln(logLevel.error, id);
-		gen_ir(id);
+	//	gen_ir(id);
 		id.destroy();
 	}
 }

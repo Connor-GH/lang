@@ -42,7 +42,6 @@ public:
 	~my_stringstream() {}
 };
 
-
 /// monolithic function that takes a delim array and splits terms.
 inline void
 getline_string_delim(std::vector<std::string> &result,
