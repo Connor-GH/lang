@@ -46,7 +46,7 @@ public:
 /// monolithic function that takes a delim array and splits terms.
 inline void
 getline_string_delim(std::vector<std::string> &result,
-					 my_stringstream &stream, std::string &str,
+					 ::my_stringstream &stream, std::string &str,
 					 const std::vector<std::string> &delim_arr)
 {
 	std::string s = "";
@@ -98,7 +98,7 @@ tokenize_assignment_expression(const std::string &buf)
 	-> std::vector<std::string>
 {
 	std::vector<std::string> result;
-	my_stringstream ss(buf);
+	::my_stringstream ss(buf);
 	std::string tmp;
 
 	const std::vector<std::string> delim_arr = { " ",
