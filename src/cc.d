@@ -4,7 +4,8 @@ import std.getopt;
 import core.memory : GC;
 import core.stdc.stdlib : exit, EXIT_SUCCESS;
 
-extern (C++) void enter_block_and_parse(const(char) *file);
+extern(C++) void
+enter_block_and_parse(const(char) *file);
 static const fail = 1;
 
 static void
@@ -26,8 +27,7 @@ main(string[] args)
 	bool verbose = false;
 	bool force = false;
 	try {
-		auto helpinfo = getopt(
-				args,
+		auto helpinfo = getopt(args,
 				std.getopt.config.caseSensitive,
 				"V|verbose", cast(bool *)&verbose,
 				"v|version", "Show version info", cast(bool *)&ver,
@@ -36,14 +36,13 @@ main(string[] args)
 				"f|force", "Force file to be compiled", cast(bool *)&force);
 
 		if (helpinfo.helpWanted) {
-			defaultGetoptPrinter(progname,  helpinfo.options);
+			defaultGetoptPrinter(progname, helpinfo.options);
 			exit(fail);
 		}
 	} catch (Exception e) {
-			stderr.writeln("Error with processing arguments: ", e.msg);
-			e.destroy();
-			exit(fail);
-
+		stderr.writeln("Error with processing arguments: ", e.msg);
+		e.destroy();
+		exit(fail);
 	}
 
 	if (ver) {

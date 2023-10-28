@@ -13,7 +13,9 @@
  *                               V
  *                               nullptr
  */
-DoublyLinkedList::DoublyLinkedList(size_t n) : n_(n) {
+DoublyLinkedList::DoublyLinkedList(size_t n)
+	: n_(n)
+{
 	node = new DoublyLinkedListNode;
 	DoublyLinkedListNode *head = nullptr;
 	node->above = head;
@@ -24,10 +26,10 @@ DoublyLinkedList::DoublyLinkedList(size_t n) : n_(n) {
 		node->below->above = node;
 		node = node->below;
 	}
-
 }
 
-DoublyLinkedList::~DoublyLinkedList() {
+DoublyLinkedList::~DoublyLinkedList()
+{
 	for (size_t i = 0; i < n_; i++) {
 		node = node->above;
 		delete node->below;

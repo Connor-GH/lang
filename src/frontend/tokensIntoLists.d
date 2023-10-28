@@ -10,10 +10,9 @@ import parsingError;
 import logWriteln : logWriteln, logLevel;
 import ir;
 
-
 /// Returns the index of string in array, returns -1 if not found
-@nogc @safe
-static long contains(string[] v, string s) {
+@nogc @safe static long contains(string[] v, string s)
+{
 	foreach (i, str; v) {
 		if (str == s)
 			return i;
@@ -21,10 +20,29 @@ static long contains(string[] v, string s) {
 	return -1;
 }
 
-static idClass handle_multi_expression(string[] vec) {
-	idClass[] leaves;
-	leaves.length = 1;
+static long has_operator_(string[] vec)
+{
+	long pos = 0;
+	if (vec.contains("+") != -1) {
+		pos = vec.contains("+");
+	} else if (vec.contains("-") != -1) {
+		pos = vec.contains("-");
+	} else if (vec.contains("*") != -1) {
+		pos = vec.contains("*");
+	} else if (vec.contains("/") != -1) {
+		pos = vec.contains("/");
+	} else if (vec.contains("%") != -1) {
+		pos = vec.contains("%");
+	} else if (vec.contains("<<") != -1) {
+		pos = vec.contains("<<");
+	} else if (vec.contains(">>") != -1) {
+		pos = vec.contains(">>");
+	}
+	return pos;
+}
 
+static idClass handle_multi_expression(string[] vec)
+{
 	// Arithmetic grouping symbols exist and they are in the proper order
 	if ((vec.contains("(") != -1) && (vec.contains(")") != -1) &&
 			(vec.contains("(") < vec.contains(")"))) {
@@ -56,10 +74,14 @@ static idClass handle_multi_expression(string[] vec) {
 		}
 		if (pos == 0)
 			return new idClass();
-		if (((pos-1) == paren_vec.contains("(")) ||
-				((pos+1) == paren_vec.contains(")"))) {
-			parsing_err(ERROR, toStringz("Identifier or number expected " ~
-						"before arithmetic operator"), get_buffer(),
+		if (((pos - 1) == paren_vec.contains("(")) ||
+				((pos + 1) == paren_vec.contains(")"))) {
+			parsing_err(
+					ERROR,
+					toStringz(
+					"Identifier or number expected " ~
+					"before arithmetic operator"),
+					get_buffer(),
 					get_buffer().fromStringz.indexOf(paren_vec[pos]));
 		}
 
@@ -68,72 +90,56 @@ static idClass handle_multi_expression(string[] vec) {
 		//         ^     ^
 		//         a     b
 		idClass a = new idClass();
-		a.set_str(paren_vec[pos-1]);
+		a.set_str(paren_vec[pos - 1]);
 		idClass b = new idClass();
-		b.set_str(paren_vec[pos+1]);
+		b.set_str(paren_vec[pos + 1]);
 		expressionClass expr = new expressionClass(operation, a, b);
 
 		idClass id = new idClass("__unnamed", "", expr);
 
-		idClass ref_var =
-				handle_multi_expression(vec[0 .. (vec.contains("("))] ~
-						vec[(vec.contains(")")+1) .. $]);
-	writeln("PARENS: ", vec[0 .. (vec.contains("("))] ~
-						vec[(vec.contains(")")+1) .. $]);
+		idClass ref_var = handle_multi_expression(
+				vec[0 .. (vec.contains("("))] ~ vec[(vec.contains(")") + 1) .. $]);
 
-		expressionClass expr2 = new expressionClass(vec[(vec.contains("(")-1)].toOperator_,
+		expressionClass expr2 = new expressionClass(
+				(vec.has_operator_() != -1)
+				? vec[vec.has_operator_()].toOperator_ : op.uninitialized,
 				id, ref_var);
 
-		return new idClass(vec[vec.contains("=")-1], "", expr2);
-	}
+		return new idClass(vec[vec.contains("=") - 1], "", expr2);
+	} else {
+		long pos = 0;
+		pos = vec.has_operator_();
 
-	long pos = 0;
-
-	if (vec.contains("+") != -1) {
-		pos = vec.contains("+");
-	} else if (vec.contains("-") != -1) {
-		pos = vec.contains("-");
-	} else if (vec.contains("*") != -1) {
-		pos = vec.contains("*");
-	} else if (vec.contains("/") != -1) {
-		pos = vec.contains("/");
-	} else if (vec.contains("%") != -1) {
-		pos = vec.contains("%");
-	} else if (vec.contains("<<") != -1) {
-		pos = vec.contains("<<");
-	} else if (vec.contains(">>") != -1) {
-		pos = vec.contains(">>");
-	}
-	if (pos > 0) {
-		// = + 7
-		if (vec[pos-1] == "=") {
-			if (vec[pos+1] != ";") {
-				expressionClass tmp = new expressionClass();
-				return new idClass(vec[pos+1], "", tmp);
+		if (pos > 0) {
+			// = + 7
+			if (vec[pos - 1] == "=") {
+				if (vec[pos + 1] != ";") {
+					expressionClass tmp = new expressionClass();
+					return new idClass(vec[pos + 1], "", tmp);
+				} else {
+					parsing_err(
+							ERROR,
+							toStringz(
+							"Identifier or number expected " ~
+							"after arithmetic operator"),
+							get_buffer(),
+							get_buffer().fromStringz.indexOf(vec[pos]));
+					assert(0);
+				}
 			} else {
-				parsing_err(ERROR, toStringz("Identifier or number expected " ~
-					"after arithmetic operator"), get_buffer(),
-				get_buffer().fromStringz.indexOf(vec[pos]));
-				assert(0);
-
+				// = 7 +
+				expressionClass tmp = new expressionClass();
+				return new idClass(vec[pos - 1], "", tmp);
 			}
 		} else {
-			// = 7 +
-			expressionClass tmp = new expressionClass();
-			return new idClass(vec[pos-1], "", tmp);
+			return new idClass();
 		}
-	} else {
-		parsing_err(ERROR, toStringz("Identifier or number expected " ~
-					"before arithmetic operator"), get_buffer(),
-				get_buffer().fromStringz.indexOf(vec[pos]));
-		assert(0);
 	}
-
 }
 
 alias stdcpp_string = basic_string!(char, char_traits!char);
-@system
-extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
+@system extern (C++) void tokens_into_lists(stdcpp_string* cpp_vec, size_t size)
+{
 	// convert vector of std::string from C++ into Dlang string array
 	string[] vec;
 	vec.length = size;
@@ -145,14 +151,12 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 		logWriteln(logLevel.warning, str);
 	}
 
-
-
 	scope idClass[] lists;
 	foreach (i, str; vec) {
 		if (str == "=") {
 			if (i > 0) {
 				idClass temp = new idClass();
-				temp.set_str(vec[i-1]);
+				temp.set_str(vec[i - 1]);
 
 				long pos = 0;
 				long amount = 0;
@@ -195,7 +199,7 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 				}
 				if (amount == 0) {
 					// assume a normal assignment
-					temp.set_init(vec[i+1]);
+					temp.set_init(vec[i + 1]);
 					lists ~= temp;
 					break;
 				}
@@ -205,19 +209,20 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 				}
 				idClass v1 = new idClass();
 				idClass v2 = new idClass();
-				if ((vec[pos-1] != "=") && (vec[pos+1] != "=")) {
-					v1.set_str(vec[pos-1]);
-					v2.set_str(vec[pos+1]);
+				if ((vec[pos - 1] != "=") && (vec[pos + 1] != "=")) {
+					v1.set_str(vec[pos - 1]);
+					v2.set_str(vec[pos + 1]);
 				} else {
 					// *= or += or /= ...
-					if (vec[pos+1] == "=") {
-						temp.set_str(vec[pos-1]);
-						v1.set_str(vec[pos-1]);
-						if ((pos+2) > size) {
-							logWriteln(logLevel.fatalError, "Statement malformed.");
+					if (vec[pos + 1] == "=") {
+						temp.set_str(vec[pos - 1]);
+						v1.set_str(vec[pos - 1]);
+						if ((pos + 2) > size) {
+							logWriteln(logLevel.fatalError,
+									"Statement malformed.");
 							exit(1);
 						}
-						v2.set_str(vec[pos+2]);
+						v2.set_str(vec[pos + 2]);
 					}
 				}
 				expressionClass expr = new expressionClass(operation, v1, v2);
@@ -228,7 +233,6 @@ extern (C++) void tokens_into_lists(stdcpp_string *cpp_vec, size_t size) {
 				parsing_err(ERROR, toStringz("Nonsensical statement.\n"),
 						get_buffer(), i);
 			}
-
 		}
 	}
 	foreach (id; lists) {

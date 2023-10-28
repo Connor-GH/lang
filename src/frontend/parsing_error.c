@@ -7,21 +7,26 @@ static const char *file_info = "";
 static size_t line_number;
 static const char *buffer_ = "";
 
-
-void set_file(const char *file) {
+void
+set_file(const char *file)
+{
 	file_info = file;
 }
-void set_line_number(const size_t number) {
+void
+set_line_number(const size_t number)
+{
 	line_number = number;
 }
-void set_buffer(const char *buffer) {
+void
+set_buffer(const char *buffer)
+{
 	buffer_ = buffer;
 }
-__attribute__((pure))
-const char *get_buffer(void) {
+__attribute__((pure)) const char *
+get_buffer(void)
+{
 	return buffer_;
 }
-
 
 void
 parsing_err(char warning_level, const char *message, const char *buffer,

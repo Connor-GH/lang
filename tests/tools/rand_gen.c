@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void) {
+int
+main(void)
+{
 	const char *options[] = {
 		"boo = boo * c;",
 		"ayy = bee;",

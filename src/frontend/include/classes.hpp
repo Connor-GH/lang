@@ -3,6 +3,5 @@
 
 #include <vector>
 #include <string>
-std::vector<std::string> tokenize_assignment_expression(std::string buf);
-
+auto tokenize_assignment_expression(const std::string& buf) -> std::vector<std::string>;
 #endif
