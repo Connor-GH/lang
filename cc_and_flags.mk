@@ -84,7 +84,7 @@ ifneq ($(DCC), gdc)
 	_LD_DFLAGS += -L-lphobos2
 	_DFLAGS += -O -mcpu=$(D_MCPU_DMD)
   else # is ldc
-	_DFLAGS += -O4 -mcpu=$(MARCH)
+	_DFLAGS += -O3 -mcpu=$(MARCH)
 	_LD_DFLAGS += -L-lstdc++ -release
     ifeq ($(CC), clang)
     ifeq ($(DEBUG),true)
