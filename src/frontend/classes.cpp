@@ -13,26 +13,31 @@ namespace
 class my_stringstream {
 private:
 	const std::string str;
-	size_t current_idx;
+	size_t current_idx = {};
 	bool is_eof;
+	bool first_time = true;
 
 public:
 	my_stringstream(const std::string str_) : str(str_), 
 		current_idx(0), is_eof(false) {}
 
 	char peek() {
-		if ((current_idx+1) <= (str.length()-1)) {
+		if (good()) {
 			return str[current_idx+1];
 		} else {
-			is_eof = true;
-			return 0;
+			return '\0';
 		}
 	}
 	char get() {
-		current_idx++;
-		return str[current_idx-1];
+		if (first_time) {
+			first_time = !first_time;
+			return str[0];
+		}
+		return str[++current_idx];
 	}
 	bool eof() {
+		if ((current_idx) >= str.length()-1)
+			is_eof = true;
 		return is_eof;
 	}
 	bool good() {
