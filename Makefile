@@ -67,7 +67,7 @@ all:
 $(TARGET): $(OBJECTS_C) $(OBJECTS_CXX) $(OBJECTS_D) | $(BINDIR)
 	$(DCC) $(DCC_BASIC_O)$(BINDIR)/$@ $^ $(IVARS) $(the_D_LFLAGS)
 
-driver:
+driver: $(OBJDIR) $(BINDIR)
 	sed $(SRCDIR)/cc.d -e 's/{{\[sed_version\]}}/$(PACKAGE_VERSION)/g' -e \
 		's/{{\[sed_name\]}}/$(PACKAGE_NAME_NOTSTRING)/g' | $(DCC) $(GDC_XD) - \
 		$(DCC_BASIC_C) $(DCC_BASIC_O)$(OBJDIR)/cc.o $(the_DFLAGS)
